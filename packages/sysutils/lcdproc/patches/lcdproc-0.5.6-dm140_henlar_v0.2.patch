@@ -48,7 +48,7 @@ diff -Naur lcdproc-0.5.6-old/LCDd.conf.orig lcdproc-0.5.6-new/LCDd.conf.orig
 diff -Naur lcdproc-0.5.6-old/server/drivers/dm140.c lcdproc-0.5.6-new/server/drivers/dm140.c
 --- lcdproc-0.5.6-old/server/drivers/dm140.c	1969-12-31 16:00:00.000000000 -0800
 +++ lcdproc-0.5.6-new/server/drivers/dm140.c	2012-11-14 12:06:25.000000000 -0800
-@@ -0,0 +1,241 @@
+@@ -0,0 +1,244 @@
 +/*  
 + *  dm1400 vfd driver (c)2007 Henrik Larsson 
 + */
@@ -69,6 +69,7 @@ diff -Naur lcdproc-0.5.6-old/server/drivers/dm140.c lcdproc-0.5.6-new/server/dri
 +#include "lcd.h"
 +#include "dm140.h"
 +
++#define DEBUG
 +#include "report.h"
 +#include "lcd_lib.h"
 +#include "libvfd.h"
@@ -109,8 +110,10 @@ diff -Naur lcdproc-0.5.6-old/server/drivers/dm140.c lcdproc-0.5.6-new/server/dri
 +        /* initialize private data */
 +	p->width = 18;
 +	p->height = 2;
-+	p->pszVendor = "040b";
-+	p->pszProduct = "7001";
++	/* p->pszVendor = "040b";*/
++       p->pszVendor = "1509";
++	/* p->pszProduct = "7001";*/
++       p->pszProduct = "925d";
 +
 +	p->gIconMask = 0; 
 +	p->gLayout = VFD_STR_LAYOUT_1;
@@ -335,7 +338,7 @@ diff -Naur lcdproc-0.5.6-old/server/drivers/dm140.h lcdproc-0.5.6-new/server/dri
 diff -Naur lcdproc-0.5.6-old/server/drivers/led.c lcdproc-0.5.6-new/server/drivers/led.c
 --- lcdproc-0.5.6-old/server/drivers/led.c	1969-12-31 16:00:00.000000000 -0800
 +++ lcdproc-0.5.6-new/server/drivers/led.c	2012-11-14 12:06:25.000000000 -0800
-@@ -0,0 +1,1065 @@
+@@ -0,0 +1,1066 @@
 +/* File modified by Henrik Larsson 2007 to interface with LCDproc API
 + */
 +
@@ -365,6 +368,7 @@ diff -Naur lcdproc-0.5.6-old/server/drivers/led.c lcdproc-0.5.6-new/server/drive
 +#include <string.h>
 +#include "lcd.h"
 +#include "libvfd.h"
++#define DEBUG
 +#include "report.h"
 +#include "dm140.h"
 +
@@ -447,7 +451,7 @@ diff -Naur lcdproc-0.5.6-old/server/drivers/led.c lcdproc-0.5.6-new/server/drive
 +  int iValue;
 +  // convert the pszValue to a number
 +  sscanf( pszValue, "%4x", &iValue);
-+  return( iValue == sValue );
++  return( (short) iValue == sValue );
 +}
 +
 +
