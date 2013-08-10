@@ -1,0 +1,10 @@
+--- old/src/sna/sna_dri.c	2013-08-11 00:55:48.924541267 +0200
++++ new/src/sna/sna_dri.c	2013-08-11 00:56:00.076772544 +0200
+@@ -48,7 +48,6 @@
+ #include <xf86drm.h>
+ #include <i915_drm.h>
+ #include <dri2.h>
+-#include <compositeext.h>
+ 
+ #if DRI2INFOREC_VERSION <= 2
+ #error DRI2 version supported by the Xserver is too old
