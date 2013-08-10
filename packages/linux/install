@@ -35,6 +35,16 @@ mkdir -p $INSTALL/lib/modules/$VER
   [ -d $PKG_BUILD/modules/lib/firmware ] && \
     cp -rf $PKG_BUILD/modules/lib/firmware/* $INSTALL/lib/firmware || true
 
+#mkdir -p $INSTALL/lib/firmware/edid
+#cp /home/bossman/edid_mod.bin  $INSTALL/lib/firmware/edid
+#pushd $INSTALL/lib/firmware
+curr_dir=`pwd`
+cd $INSTALL/lib/firmware 
+ln -s /storage/.config/edid edid
+cd $curr_dir
+#popd
+
+
 mkdir -p $INSTALL/etc
   cp $PKG_DIR/config/modules $INSTALL/etc
 
