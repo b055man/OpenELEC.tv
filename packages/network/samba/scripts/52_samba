@@ -28,15 +28,11 @@
   . /etc/profile
 
   SAMBA_ENABLED=true
-  if [ -f $CONFIG_CACHE/service_samba.conf ]; then
-    . $CONFIG_CACHE/service_samba.conf
+  if [ -f $CONFIG_CACHE/services/samba.conf ]; then
+    . $CONFIG_CACHE/services/samba.conf
   fi
 
   if [ "$SAMBA_ENABLED" = "true" ]; then
-
-    # wait for network
-    wait_for_inet_addr force
-
     progress  "Starting Samba server"
 
     SMB_USERCONF="/storage/.config/samba.conf"

@@ -35,10 +35,6 @@ PKG_LONGDESC="ALSA (Advanced Linux Sound Architecture) is the next generation Li
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="yes"
 
-if [ "$PULSEAUDIO_SUPPORT" = yes ]; then
-  PKG_DEPENDS="$PKG_DEPENDS alsa-plugins"
-fi
-
 # package specific configure options
 PKG_CONFIGURE_OPTS_TARGET="--with-plugindir=/usr/lib/alsa \
                            --disable-python \
@@ -64,6 +60,6 @@ post_makeinstall_target() {
     cp -PR $PKG_DIR/config/modprobe.d $INSTALL/usr/config
 }
 
-post_install_target() {
+post_install() {
   add_group audio 63
 }

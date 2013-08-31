@@ -4,6 +4,9 @@
     DISTRONAME="${DISTRONAME}_Gotham"
   fi
 
+# short project description
+  DESCRIPTION="OpenELEC is a fast and userfriendly XBMC Mediacenter distribution."
+
 # Welcome Message for e.g. SSH Server (up to 5 Lines)
   GREETING0="##############################################"
   GREETING1="# OpenELEC - The living room PC for everyone #"
@@ -138,9 +141,6 @@
 # build and install ALSA Audio support (yes / no)
   ALSA_SUPPORT="yes"
 
-# build and install PulseAudio support (yes / no)
-  PULSEAUDIO_SUPPORT="no"
-
 # build and install with non-free support
 # (RAR compression support in XBMC) (yes / no)
   NONFREE_SUPPORT="yes"
@@ -215,10 +215,13 @@
 # build and install OpenVPN support (yes / no)
   OPENVPN_SUPPORT="yes"
 
-# build and install diskmounter service (udisks)
-# this service provide auto mounting support for external drives
-# in the mediacenter also automount internally drives at boottime (yes / no)
-  UDISKS="yes"
+# build and install diskmounter support (udevil)
+# this service provide auto mounting support for external drives in the
+# mediacenter also automount internally drives at boottime via udev (yes / no)
+  UDEVIL="yes"
+
+# build and install parted support (yes / no)
+  PARTED="yes"
 
 # build and install powermanagement support (upower) (yes / no)
   UPOWER="yes"

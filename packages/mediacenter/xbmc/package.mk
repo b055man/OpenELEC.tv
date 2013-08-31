@@ -19,9 +19,9 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="12.2-a603ef9"
+PKG_VERSION="12.2-18397e1"
 if [ "$XBMC" = "master" ]; then
-  PKG_VERSION="13.alpha-df91888"
+  PKG_VERSION="13.alpha-0efa87e"
 elif [ "$XBMC" = "xbmc-aml" ]; then
   PKG_VERSION="aml-frodo-d9119f2"
 fi
@@ -102,15 +102,6 @@ if [ "$ALSA_SUPPORT" = yes ]; then
   XBMC_ALSA="--enable-alsa"
 else
   XBMC_ALSA="--disable-alsa"
-fi
-
-if [ "$PULSEAUDIO_SUPPORT" = yes ]; then
-# for PulseAudio support
-  PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET pulseaudio"
-  PKG_DEPENDS="$PKG_DEPENDS pulseaudio"
-  XBMC_PULSEAUDIO="--enable-pulse"
-else
-  XBMC_PULSEAUDIO="--disable-pulse"
 fi
 
 if [ "$CEC_SUPPORT" = yes ]; then
@@ -384,7 +375,7 @@ PKG_CONFIGURE_OPTS_TARGET="gl_cv_func_gettimeofday_clobber=no \
                            $XBMC_XORG \
                            --disable-ccache \
                            $XBMC_ALSA \
-                           $XBMC_PULSEAUDIO \
+                           --disable-pulse \
                            --enable-rtmp \
                            $XBMC_SAMBA \
                            $XBMC_NFS \
