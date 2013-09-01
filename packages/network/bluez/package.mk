@@ -42,22 +42,23 @@ else
 fi
 
 if [ "$DEVTOOLS" = "yes" ]; then
-  BLUEZ_CONFIG="$BLUEZ_CONFIG --enable-monitor --enable-test --enable-tools"
+  BLUEZ_CONFIG="$BLUEZ_CONFIG --enable-monitor --enable-test"
 else
-  BLUEZ_CONFIG="$BLUEZ_CONFIG --disable-monitor --disable-test --disable-tools"
+  BLUEZ_CONFIG="$BLUEZ_CONFIG --disable-monitor --disable-test"
 fi
 
 PKG_CONFIGURE_OPTS_TARGET="--disable-dependency-tracking \
                            --disable-silent-rules \
-                           --disable-shared \
-                           --enable-static \
-                           --enable-library \
+                           --enable-shared \
+                           --disable-static \
+                           --disable-library \
                            --enable-usb \
                            --enable-udev \
                            --disable-cups \
                            --disable-obex \
                            --enable-client \
                            --disable-systemd \
+                           --enable-tools \
                            --enable-datafiles \
                            --disable-experimental \
                            --with-gnu-ld \
