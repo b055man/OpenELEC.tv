@@ -35,7 +35,11 @@ PKG_LONGDESC="The rpcbind utility is a server that converts RPC program numbers 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="yes"
 
-PKG_CONFIGURE_OPTS_TARGET="--enable-warmstarts \
+PKG_CONFIGURE_OPTS_TARGET="--disable-warmstarts \
                            --disable-libwrap \
                            --with-statedir=/tmp \
                            --with-rpcuser=root"
+
+post_install() {
+  enable_service rpcbind.service
+}

@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="timezone-data"
-PKG_VERSION="2011n"
+PKG_VERSION="2013d"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="Public Domain"
@@ -53,4 +53,12 @@ post_makeinstall_target() {
 
   mkdir -p $INSTALL/etc
     ln -sf /var/run/localtime $INSTALL/etc/localtime
+
+  mkdir -p $INSTALL/usr/lib/openelec
+    cp -PR $PKG_DIR/scripts/tzdata-setup $INSTALL/usr/lib/openelec
+}
+
+post_install() {
+  enable_service tz-data-monitor.path
+  enable_service tz-data.service
 }

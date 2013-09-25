@@ -1,0 +1,15 @@
+[Unit]
+Description=Xorg Server
+Before=graphical.target
+After=multi-user.target
+
+ConditionPathExists=/run/openelec/xorg-settings.conf
+
+[Service]
+EnvironmentFile=/run/openelec/xorg-settings.conf
+EnvironmentFile=-/run/openelec/debug/xorg.conf
+ExecStart=/usr/bin/Xorg vt01 $XORG_ARGS $XORG_DEBUG
+Restart=always
+
+[Install]
+WantedBy=graphical.target

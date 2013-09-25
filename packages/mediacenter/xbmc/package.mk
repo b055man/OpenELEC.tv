@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="12.2-58a9d9e"
+PKG_VERSION="12.2-091cb29"
 if [ "$XBMC" = "master" ]; then
   PKG_VERSION="13.alpha-2ef8929"
 elif [ "$XBMC" = "xbmc-aml" ]; then
@@ -457,14 +457,19 @@ make_target() {
 }
 
 post_makeinstall_target() {
+  rm -rf $INSTALL/usr/bin/xbmc
+  rm -rf $INSTALL/usr/bin/xbmc-standalone
+
+  mkdir -p $INSTALL/usr/lib/xbmc
+    cp $PKG_DIR/scripts/xbmc-config $INSTALL/usr/lib/xbmc
+    cp $PKG_DIR/scripts/xbmc-hacks $INSTALL/usr/lib/xbmc
+    cp $PKG_DIR/scripts/xbmc-sources $INSTALL/usr/lib/xbmc
+
   mkdir -p $INSTALL/usr/bin
     cp $PKG_DIR/scripts/cputemp $INSTALL/usr/bin
     cp $PKG_DIR/scripts/gputemp $INSTALL/usr/bin
     cp $PKG_DIR/scripts/setwakeup.sh $INSTALL/usr/bin
     cp tools/EventClients/Clients/XBMC\ Send/xbmc-send.py $INSTALL/usr/bin/xbmc-send
-
-    rm -rf $INSTALL/usr/bin/xbmc
-    rm -rf $INSTALL/usr/bin/xbmc-standalone
 
   if [ ! "$DISPLAYSERVER" = "xorg-server" ]; then
     rm -rf $INSTALL/usr/lib/xbmc/xbmc-xrandr
@@ -496,10 +501,6 @@ post_makeinstall_target() {
 
   mkdir -p $INSTALL/usr/lib/python"$PYTHON_VERSION"/site-packages/xbmc
     cp -R tools/EventClients/lib/python/* $INSTALL/usr/lib/python"$PYTHON_VERSION"/site-packages/xbmc
-
-# install powermanagement hooks
-  mkdir -p $INSTALL/etc/pm/sleep.d
-    cp $PKG_DIR/sleep.d/* $INSTALL/etc/pm/sleep.d
 
 # install project specific configs
   mkdir -p $INSTALL/usr/share/xbmc/config
@@ -533,3 +534,20 @@ post_makeinstall_target() {
   fi
 }
 
+post_install() {
+# link default.target to xbmc.target
+  ln -sf xbmc.target $INSTALL/lib/systemd/system/default.target
+
+  enable_service xbmc-autostart.service
+  enable_service xbmc-cleanlogs.service
+  enable_service xbmc-config.service
+  enable_service xbmc-hacks.service
+  enable_service xbmc-sources.service
+  enable_service xbmc-halt.service
+  enable_service xbmc-poweroff.service
+  enable_service xbmc-reboot.service
+  enable_service xbmc-waitonnetwork.service
+  enable_service xbmc.service
+  enable_service xbmc-lcd-suspend.service
+  enable_service xbmc-lirc-suspend.service
+}

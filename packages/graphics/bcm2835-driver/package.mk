@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="bcm2835-driver"
-PKG_VERSION="f6bb324"
+PKG_VERSION="7d8a762"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="nonfree"
@@ -75,4 +75,10 @@ makeinstall_target() {
 
   mkdir -p $INSTALL/opt/vc
     ln -sf /usr/lib $INSTALL/opt/vc/lib
+}
+
+post_install() {
+  enable_service bcm2835-threshold.service
+  enable_service fbset.service
+  enable_service unbind-console.service
 }

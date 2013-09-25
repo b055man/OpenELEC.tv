@@ -225,12 +225,6 @@
 # mediacenter also automount internally drives at boottime via udev (yes / no)
   UDEVIL="yes"
 
-# build and install parted support (yes / no)
-  PARTED="yes"
-
-# build and install powermanagement support (upower) (yes / no)
-  UPOWER="yes"
-
 # build and install exFAT fuse support (yes / no)
   EXFAT="yes"
 
@@ -242,6 +236,11 @@
 
 # OpenGL(X) implementation to use (no / Mesa)
   OPENGL="Mesa"
+
+# Mesa to use
+# default: default Mesa release
+# master: latest Mesa-master checkout
+  MESA="master"
 
 # OpenGL-ES implementation to use (no)
   OPENGLES="no"
@@ -261,7 +260,7 @@
   XBMCPLAYER_DRIVER="default"
 
 # Use VDPAU video acceleration (needs nVidia driver and a supported card)
-  VDPAU="no"
+  VDPAU="yes"
 
 # Use VAAPI video acceleration (needs intel i965 driver and a supported card)
   VAAPI="yes"

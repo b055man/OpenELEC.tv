@@ -63,3 +63,7 @@ makeinstall_target() {
     cp -PR services/vmtoolsd/.libs/vmtoolsd $INSTALL/usr/bin
     cp -PR checkvm/.libs/vmware-checkvm $INSTALL/usr/bin
 }
+
+post_install() {
+  enable_service open-vm-tools.service
+}

@@ -57,7 +57,7 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-dependency-tracking \
                            --disable-cups \
                            --disable-obex \
                            --enable-client \
-                           --disable-systemd \
+                           --enable-systemd \
                            --enable-tools \
                            --enable-datafiles \
                            --disable-experimental \
@@ -69,5 +69,14 @@ pre_configure_target() {
 # bluez fails to build in subdirs
   cd $ROOT/$PKG_BUILD
     rm -rf .$TARGET_NAME
+}
+
+post_makeinstall_target() {
+  rm -rf $INSTALL/lib/systemd
+}
+
+post_install() {
+  enable_service bluetooth.service
+  enable_service obex.service
 }
 

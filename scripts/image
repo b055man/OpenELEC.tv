@@ -59,15 +59,14 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
   mkdir -p $INSTALL/sbin
   mkdir -p $INSTALL/dev
   mkdir -p $INSTALL/proc
-#  mkdir -p $INSTALL/run
-  ln -sf /var/run $INSTALL/run
+  mkdir -p $INSTALL/run
   mkdir -p $INSTALL/sys
+  mkdir -p $INSTALL/tmp
   mkdir -p $INSTALL/usr
   mkdir -p $INSTALL/var
   mkdir -p $INSTALL/flash
   mkdir -p $INSTALL/storage
   ln -sf /var $INSTALL/usr/var
-  ln -sf /var/tmp $INSTALL/tmp
   ln -sf /var/media $INSTALL/media
 
   if [ "$TARGET_ARCH" = "x86_64" -o "$TARGET_ARCH" = "powerpc64" ]; then
@@ -121,9 +120,6 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
 
 # Automounter support
   [ "$UDEVIL" = "yes" ] && $SCRIPTS/install udevil
-
-# Powermanagement support
-  [ "$UPOWER" = "yes" ] && $SCRIPTS/install upower
 
 # NTFS 3G support
   [ "$EXFAT" = "yes" ] && $SCRIPTS/install fuse-exfat
@@ -219,6 +215,8 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
 
     # create release dir
       mkdir -p $RELEASE_DIR
+      # remove n previous created release image
+        rm -rf $TARGET_IMG/$IMAGE_NAME.img.gz
         if [ -n "$BOOTLOADER" ]; then
           BOOTLOADER_DIR=`find $PACKAGES -type d -name $BOOTLOADER 2>/dev/null`
           if [ -d "$BOOTLOADER_DIR"/files ]; then
@@ -266,11 +264,9 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
 
     # remove an previous created release tarball
       rm -rf $TARGET_IMG/$IMAGE_NAME.tar
-      rm -rf $TARGET_IMG/$IMAGE_NAME.tar.bz2 # to remove later
 
     # create release tarball
       tar cf $TARGET_IMG/$IMAGE_NAME.tar -C target $IMAGE_NAME
-      tar cjf $TARGET_IMG/$IMAGE_NAME.tar.bz2 -C target $IMAGE_NAME # to remove later
 
     # cleanup release dir
       rm -rf $RELEASE_DIR

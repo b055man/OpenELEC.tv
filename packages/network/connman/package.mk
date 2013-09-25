@@ -92,6 +92,10 @@ post_makeinstall_target() {
 
   mkdir -p $INSTALL/usr/bin
     cp -P client/connmanctl $INSTALL/usr/bin
+    cp -P $PKG_DIR/scripts/cm-online $INSTALL/usr/bin
+
+  mkdir -p $INSTALL/usr/lib/connman
+    cp -P $PKG_DIR/scripts/connman-setup $INSTALL/usr/lib/connman
 
   mkdir -p $INSTALL/etc
     ln -sf /var/cache/resolv.conf $INSTALL/etc/resolv.conf
@@ -115,4 +119,10 @@ post_makeinstall_target() {
 post_install() {
   add_user system x 430 430 "service" "/var/run/connman" "/bin/sh"
   add_group system 430
+}
+
+post_install() {
+  enable_service hostname.service
+  enable_service loopback.service
+  enable_service connman.service
 }

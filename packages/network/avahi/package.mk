@@ -25,8 +25,8 @@ PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://avahi.org/"
 PKG_URL="http://www.avahi.org/download/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_DEPENDS="Python expat dbus connman dbus-python"
-PKG_BUILD_DEPENDS_TARGET="toolchain Python expat libdaemon dbus dbus-python"
+PKG_DEPENDS="expat dbus connman"
+PKG_BUILD_DEPENDS_TARGET="toolchain expat libdaemon dbus"
 PKG_PRIORITY="optional"
 PKG_SECTION="network"
 PKG_SHORTDESC="avahi: A Zeroconf mDNS/DNS-SD responder"
@@ -51,9 +51,9 @@ PKG_CONFIGURE_OPTS_TARGET="py_cv_mod_gtk_=yes \
                            --disable-dbm \
                            --disable-gdbm \
                            --enable-libdaemon \
-                           --enable-python \
+                           --disable-python \
                            --disable-pygtk \
-                           --enable-python-dbus \
+                           --disable-python-dbus \
                            --disable-mono \
                            --disable-monodoc \
                            --disable-autoipd \
@@ -101,9 +101,16 @@ post_makeinstall_target() {
   rm -f $INSTALL/usr/bin/avahi-bookmarks
   rm -f $INSTALL/usr/bin/avahi-publish*
   rm -f $INSTALL/usr/bin/avahi-resolve*
+
+  mkdir -p $INSTALL/usr/share/services
+    cp -P $PKG_DIR/default.d/*.conf $INSTALL/usr/share/services
+
 }
 
 post_install() {
   add_user avahi x 495 495 "avahi-daemon" "/var/run/avahi-daemon" "/bin/sh"
   add_group avahi 495
+
+  enable_service avahi-defaults.service
+  enable_service avahi-daemon.service
 }
