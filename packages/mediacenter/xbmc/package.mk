@@ -19,9 +19,9 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="12.2-091cb29"
+PKG_VERSION="12.2-9714e7e"
 if [ "$XBMC" = "master" ]; then
-  PKG_VERSION="13.alpha-7f45288"
+  PKG_VERSION="13.alpha-3723806"
 elif [ "$XBMC" = "xbmc-aml" ]; then
   PKG_VERSION="aml-frodo-d9119f2"
 fi
@@ -320,20 +320,6 @@ else
   XBMC_VAAPI="--disable-vaapi"
 fi
 
-if [ "$XVBA" = yes ]; then
-  get_graphicdrivers
-  for drv in $GRAPHIC_DRIVERS; do
-    if [ "$drv" = "fglrx" ]; then
-      PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET xf86-video-fglrx"
-    elif [ "$drv" = "fglrx-legacy" ]; then
-      PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET xf86-video-fglrx-legacy"
-    fi
-  done
-  XBMC_XVBA="--enable-xvba"
-else
-  XBMC_XVBA="--disable-xvba"
-fi
-
 if [ "$CRYSTALHD" = yes ]; then
   PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET crystalhd"
   PKG_DEPENDS="$PKG_DEPENDS crystalhd"
@@ -366,7 +352,7 @@ PKG_CONFIGURE_OPTS_TARGET="gl_cv_func_gettimeofday_clobber=no \
                            $XBMC_VDPAU \
                            $XBMC_VAAPI \
                            $XBMC_CRYSTALHD \
-                           $XBMC_XVBA \
+                           --disable-xvba \
                            --disable-vdadecoder \
                            --disable-vtbdecoder \
                            --disable-tegra \

@@ -237,21 +237,19 @@
 # OpenGL(X) implementation to use (no / Mesa)
   OPENGL="Mesa"
 
-# Mesa to use
-# default: default Mesa release
-# master: latest Mesa-master checkout
-  MESA="default"
-
 # OpenGL-ES implementation to use (no)
   OPENGLES="no"
 
 # Windowmanager to use (ratpoison / none)
   WINDOWMANAGER="ratpoison"
 
+# include uvesafb support (yes / no)
+  UVESAFB_SUPPORT="yes"
+
 # Displayserver to use (xorg-server / no)
   DISPLAYSERVER="xorg-server"
 
-# Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,fglrx,nvidia,nouveau,vmware)
+# Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,nvidia,nouveau,vmware)
 # Space separated list is supported,
 # e.g. GRAPHIC_DRIVERS="i915 i965 r300 r600 radeon nvidia nouveau"
   GRAPHIC_DRIVERS="nvidia"
@@ -264,9 +262,6 @@
 
 # Use VAAPI video acceleration (needs intel i965 driver and a supported card)
   VAAPI="no"
-
-# Use XVBA video acceleration (needs AMD fglrx driver and a supported card)
-  XVBA="no"
 
 # Use Broadcom CrystalHD Decoder Card for video acceleration 
 # (needs Kernelsupport for Broadcom Decoder Card and a supported card)
@@ -304,7 +299,7 @@
   LCD_DRIVER="irtrans,imon,imonlcd,mdm166a,MtxOrb,lis,dm140,hd44780,CFontz,SureElec,vlsys_m428"
 
 # Modules to install in initramfs for early boot
-  INITRAMFS_MODULES="uvesafb xhci-hcd"
+  INITRAMFS_MODULES="xhci-hcd"
 
 # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
 # Space separated list is supported,

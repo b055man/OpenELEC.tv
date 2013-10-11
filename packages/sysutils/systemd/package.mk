@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="systemd"
-PKG_VERSION="207"
+PKG_VERSION="208"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
@@ -103,6 +103,14 @@ post_makeinstall_target() {
   # remove unneeded stuff
     rm -rf $INSTALL/etc/systemd/system
     rm -rf $INSTALL/usr/share/zsh
+    rm -rf $INSTALL/usr/lib/kernel/install.d
+    rm -rf $INSTALL/usr/lib/rpm
+    rm  -f $INSTALL/usr/bin/kernel-install
+
+  # tune journald.conf
+    sed -e "s,^.*Compress=.*$,Compress=no,g" -i $INSTALL/etc/systemd/journald.conf
+    sed -e "s,^.*SplitMode=.*$,SplitMode=none,g" -i $INSTALL/etc/systemd/journald.conf
+    sed -e "s,^.*MaxRetentionSec=.*$,MaxRetentionSec=1week,g" -i $INSTALL/etc/systemd/journald.conf
 
   # replace systemd-machine-id-setup with ours
     mkdir -p $INSTALL/bin
