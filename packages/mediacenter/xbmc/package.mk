@@ -19,12 +19,7 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="12.2-9714e7e"
-if [ "$XBMC" = "master" ]; then
-  PKG_VERSION="13.alpha-3723806"
-elif [ "$XBMC" = "xbmc-aml" ]; then
-  PKG_VERSION="aml-frodo-d9119f2"
-fi
+PKG_VERSION="13.alpha-923f1c8"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
@@ -217,13 +212,8 @@ else
 fi
 
 if [ "$AIRTUNES_SUPPORT" = yes ]; then
-  if [ "$XBMC" = master ]; then
-    PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET libshairplay"
-    PKG_DEPENDS="$PKG_DEPENDS libshairplay"
-  else
-    PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET libshairport"
-    PKG_DEPENDS="$PKG_DEPENDS libshairport"
-  fi
+  PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET libshairplay"
+  PKG_DEPENDS="$PKG_DEPENDS libshairplay"
   XBMC_AIRTUNES="--enable-airtunes"
 else
   XBMC_AIRTUNES="--disable-airtunes"
@@ -285,20 +275,6 @@ if [ ! "$XBMCPLAYER_DRIVER" = default ]; then
                       -I$SYSROOT_PREFIX/usr/include/interface/vmcs_host/linux"
     XBMC_CFLAGS="$XBMC_CFLAGS $BCM2835_INCLUDES"
     XBMC_CXXFLAGS="$XBMC_CXXFLAGS $BCM2835_INCLUDES"
-  elif [ "$XBMCPLAYER_DRIVER" = "marvell-libgfx" ]; then
-    PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET marvell-ipp"
-    PKG_DEPENDS="$PKG_DEPENDS marvell-ipp"
-    XBMC_OPENMAX="--disable-openmax"
-    XBMC_PLAYER="--with-platform=marvell-dove"
-    XBMC_CODEC=""
-  elif [ "$XBMCPLAYER_DRIVER" = "libamlplayer-m1" -o "$XBMCPLAYER_DRIVER" = "libamlplayer-m3" ]; then
-    XBMC_OPENMAX="--disable-openmax"
-    XBMC_PLAYER="--enable-player=amlplayer"
-    XBMC_CODEC="--enable-codec=amcodec"
-    AMLPLAYER_INCLUDES="-I$SYSROOT_PREFIX/usr/include/amlplayer"
-    XBMC_CFLAGS="$XBMC_CFLAGS $AMLPLAYER_INCLUDES"
-    XBMC_CXXFLAGS="$XBMC_CXXFLAGS $AMLPLAYER_INCLUDES"
-
   else
     XBMC_OPENMAX="--disable-openmax"
   fi
@@ -505,14 +481,12 @@ post_makeinstall_target() {
       cp $PKG_DIR/config/advancedsettings.xml $INSTALL/usr/share/xbmc/system/
     fi
 
-  if [ "$XBMC" = master ]; then
-    mkdir -p $INSTALL/usr/share/xbmc/system/settings
-      if [ -f $PROJECT_DIR/$PROJECT/xbmc/appliance.xml ]; then
-        cp $PROJECT_DIR/$PROJECT/xbmc/appliance.xml $INSTALL/usr/share/xbmc/system/settings
-      else
-        cp $PKG_DIR/config/appliance.xml $INSTALL/usr/share/xbmc/system/settings
-      fi
-  fi
+  mkdir -p $INSTALL/usr/share/xbmc/system/settings
+    if [ -f $PROJECT_DIR/$PROJECT/xbmc/appliance.xml ]; then
+      cp $PROJECT_DIR/$PROJECT/xbmc/appliance.xml $INSTALL/usr/share/xbmc/system/settings
+    else
+      cp $PKG_DIR/config/appliance.xml $INSTALL/usr/share/xbmc/system/settings
+    fi
 
   if [ "$XBMC_EXTRA_FONTS" = yes ]; then
     mkdir -p $INSTALL/usr/share/xbmc/media/Fonts
