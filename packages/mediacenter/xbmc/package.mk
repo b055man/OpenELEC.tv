@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="13.alpha-923f1c8"
+PKG_VERSION="13.alpha-25965c1"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
@@ -239,7 +239,6 @@ if [ "$SAMBA_SUPPORT" = yes ]; then
   PKG_BUILD_DEPENDS_TARGET="$PKG_BUILD_DEPENDS_TARGET samba"
   PKG_DEPENDS="$PKG_DEPENDS samba"
   XBMC_SAMBA="--enable-samba"
-  XBMC_LIBS="$XBMC_LIBS -ltalloc -ltdb -ltevent -lwbclient"
 else
   XBMC_SAMBA="--disable-samba"
 fi
@@ -392,12 +391,11 @@ pre_configure_target() {
 # Todo: XBMC segfaults on exit when building with LTO support
   strip_lto
 
-# dont build parallel
-# MAKEFLAGS=-j1
+# xbmc fails to build with more then 4 cores
+  MAKEFLAGS=-j4
 
   export CFLAGS="$CFLAGS $XBMC_CFLAGS"
   export CXXFLAGS="$CXXFLAGS $XBMC_CXXFLAGS"
-  export LIBS="$LIBS $XBMC_LIBS"
 }
 
 make_target() {

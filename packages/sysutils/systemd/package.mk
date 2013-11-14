@@ -107,6 +107,14 @@ post_makeinstall_target() {
     rm -rf $INSTALL/usr/lib/rpm
     rm  -f $INSTALL/usr/bin/kernel-install
 
+   rm -f $INSTALL/lib/udev/hwdb.d/20-OUI.hwdb
+   rm -f $INSTALL/lib/udev/hwdb.d/20-acpi-vendor.hwdb
+   rm -f $INSTALL/lib/udev/hwdb.d/20-bluetooth-vendor-product.hwdb
+   rm -f $INSTALL/lib/udev/hwdb.d/20-pci-classes.hwdb
+   rm -f $INSTALL/lib/udev/hwdb.d/20-pci-vendor-model.hwdb
+   rm -f $INSTALL/lib/udev/hwdb.d/20-usb-classes.hwdb
+   rm -f $INSTALL/lib/udev/hwdb.d/20-usb-vendor-model.hwdb
+
   # tune journald.conf
     sed -e "s,^.*Compress=.*$,Compress=no,g" -i $INSTALL/etc/systemd/journald.conf
     sed -e "s,^.*SplitMode=.*$,SplitMode=none,g" -i $INSTALL/etc/systemd/journald.conf
@@ -136,6 +144,7 @@ post_makeinstall_target() {
       ln -sf /bin/systemctl $INSTALL/usr/sbin/runlevel
       ln -sf /bin/systemctl $INSTALL/usr/sbin/shutdown
       ln -sf /bin/systemctl $INSTALL/usr/sbin/telinit
+      ln -sf /bin/udevadm $INSTALL/sbin/udevadm
 
   # remove Network adaper renaming rule, this is confusing
     rm -rf $INSTALL/lib/udev/rules.d/80-net-name-slot.rules
@@ -191,4 +200,5 @@ post_install() {
   enable_service machine-id.service
   enable_service debugconfig.service
   enable_service userconfig.service
+  enable_service hwdb.service
 }

@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="xbmc-pvr-addons"
-PKG_VERSION="cd5023b"
+PKG_VERSION="54a6b9d"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"

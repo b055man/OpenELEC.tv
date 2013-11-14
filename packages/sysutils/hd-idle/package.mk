@@ -32,5 +32,10 @@ PKG_PRIORITY="optional"
 PKG_SECTION="system"
 PKG_SHORTDESC="hd-idle is a [Linux] utility program for spinning-down external disks after a period of idle time."
 PKG_LONGDESC="hd-idle is a utility program for spinning-down external disks after a period of idle time. Since most external IDE disk enclosures don't support setting the IDE idle timer, a program like hd-idle is required to spin down idle disks automatically."
+
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
+
+post_unpack() {
+  mv $ROOT/$BUILD/$PKG_NAME $ROOT/$BUILD/$PKG_NAME-$PKG_VERSION
+}
