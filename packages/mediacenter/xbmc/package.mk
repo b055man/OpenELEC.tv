@@ -19,7 +19,7 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="13.alpha-25965c1"
+PKG_VERSION="13.alpha-f1e1102"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
@@ -130,6 +130,27 @@ if [ "$XBMC_VIS_GOOM" = yes ]; then
   XBMC_GOOM="--enable-goom"
 else
   XBMC_GOOM="--disable-goom"
+fi
+
+if [ "$XBMC_VIS_WAVEFORM" = yes ]; then
+# for Waveform Visualisation support
+  XBMC_WAVEFORM="--enable-waveform"
+else
+  XBMC_WAVEFORM="--disable-waveform"
+fi
+
+if [ "$XBMC_VIS_SPECTRUM" = yes ]; then
+# for Spectrum Visualisation support
+  XBMC_SPECTRUM="--enable-spectrum"
+else
+  XBMC_SPECTRUM="--disable-spectrum"
+fi
+
+if [ "$XBMC_VIS_FISHBMC" = yes ]; then
+# for FishBMC Visualisation support
+  XBMC_FISHBMC="--enable-fishbmc"
+else
+  XBMC_FISHBMC="--disable-fishbmc"
 fi
 
 if [ "$JOYSTICK_SUPPORT" = yes ]; then
@@ -339,6 +360,9 @@ PKG_CONFIGURE_OPTS_TARGET="gl_cv_func_gettimeofday_clobber=no \
                            $XBMC_GOOM \
                            $XBMC_RSXS \
                            $XBMC_PROJECTM \
+                           $XBMC_WAVEFORM \
+                           $XBMC_SPECTRUM \
+                           $XBMC_FISHBMC \
                            $XBMC_XORG \
                            --disable-ccache \
                            $XBMC_ALSA \

@@ -142,6 +142,16 @@
 # build and install 'GOOM' Visualization (yes / no)
   XBMC_VIS_GOOM="no"
 
+# build and install 'Waveform' Visualization (yes / no)
+  XBMC_VIS_WAVEFORM="yes"
+
+# build and install 'Spectrum' Visualization (yes / no)
+  XBMC_VIS_SPECTRUM="yes"
+
+# build and install 'FishBMC' Visualization (yes / no)
+  # does not work on RPi
+  XBMC_VIS_FISHBMC="no"
+
 # build and install ALSA Audio support (yes / no)
   ALSA_SUPPORT="no"
 

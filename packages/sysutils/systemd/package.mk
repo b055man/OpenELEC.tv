@@ -74,8 +74,8 @@ PKG_CONFIGURE_OPTS_TARGET="ac_cv_func_malloc_0_nonnull=yes \
                            --enable-logind \
                            --disable-backlight \
                            --disable-machined \
-                         --enable-hostnamed \
-                         --enable-timedated \
+                           --disable-hostnamed \
+                           --disable-timedated \
                            --disable-localed \
                            --disable-coredump \
                            --disable-polkit \
@@ -118,7 +118,10 @@ post_makeinstall_target() {
   # tune journald.conf
     sed -e "s,^.*Compress=.*$,Compress=no,g" -i $INSTALL/etc/systemd/journald.conf
     sed -e "s,^.*SplitMode=.*$,SplitMode=none,g" -i $INSTALL/etc/systemd/journald.conf
-    sed -e "s,^.*MaxRetentionSec=.*$,MaxRetentionSec=1week,g" -i $INSTALL/etc/systemd/journald.conf
+    sed -e "s,^.*MaxRetentionSec=.*$,MaxRetentionSec=1day,g" -i $INSTALL/etc/systemd/journald.conf
+    sed -e "s,^.*RuntimeMaxUse=.*$,RuntimeMaxUse=2M,g" -i $INSTALL/etc/systemd/journald.conf
+    sed -e "s,^.*RuntimeMaxFileSize=.*$,RuntimeMaxFileSize=128K,g" -i $INSTALL/etc/systemd/journald.conf
+    sed -e "s,^.*SystemMaxUse=.*$,SystemMaxUse=10M,g" -i $INSTALL/etc/systemd/journald.conf
 
   # replace systemd-machine-id-setup with ours
     mkdir -p $INSTALL/bin
@@ -152,6 +155,22 @@ post_makeinstall_target() {
   # remove debug-shell.service, we install our own
     rm -rf $INSTALL/lib/systemd/system/debug-shell.service
 
+  # remove systemd-update-utmp. pointless
+    rm -rf $INSTALL/lib/systemd/systemd-update-utmp
+    rm -rf $INSTALL/lib/systemd/system/systemd-update-utmp-runlevel.service
+    rm -rf $INSTALL/lib/systemd/system/systemd-update-utmp.service
+    rm -rf $INSTALL/lib/systemd/system/sysinit.target.wants/systemd-update-utmp.service
+
+  # remove systemd-ask-password. pointless
+    rm -rf $INSTALL/lib/systemd/system/systemd-ask-password-wall.service
+    rm -rf $INSTALL/lib/systemd/system/systemd-ask-password-wall.path
+    rm -rf $INSTALL/lib/systemd/system/systemd-ask-password-console.path
+    rm -rf $INSTALL/lib/systemd/system/systemd-ask-password-console.service
+    rm -rf $INSTALL/bin/systemd-ask-password
+    rm -rf $INSTALL/bin/systemd-tty-ask-password-agent
+    rm -rf $INSTALL/lib/systemd/system/sysinit.target.wants/systemd-ask-password-console.path
+    rm -rf $INSTALL/lib/systemd/system/multi-user.target.wants/systemd-ask-password-wall.path
+
   # remove some generators we never use
     rm -rf $INSTALL/lib/systemd/system-generators/systemd-fstab-generator
 
@@ -181,9 +200,7 @@ post_makeinstall_target() {
 }
 
 post_install() {
-  add_user systemd-journal-gateway x 191 191 "Journal Gateway" "/" "/bin/sh"
   add_group systemd-journal 190
-  add_group systemd-journal-gateway 191
 
   add_group audio 63
   add_group cdrom 11
