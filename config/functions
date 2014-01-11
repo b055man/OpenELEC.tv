@@ -56,7 +56,27 @@ setup_toolchain() {
 }
 
 kernel_path() {
-  ls -d $ROOT/$BUILD/linux-*
+  . $ROOT/packages/linux/package.mk
+  echo $ROOT/$BUILD/${PKG_NAME}-${PKG_VERSION}
+}
+
+kernel_version() {
+  . $ROOT/packages/linux/package.mk
+  echo ${PKG_VERSION}
+}
+
+# get package's build dir
+get_build_dir() {
+  if [ ! -z $1 ] ; then
+    local _PKG_DIR=$(find $ROOT/packages -name $1)
+    if [ -d $_PKG_DIR -a -f $_PKG_DIR/package.mk ] ; then
+      . $_PKG_DIR/package.mk
+    # TODO: remove
+    elif [ -d $_PKG_DIR -a -f $_PKG_DIR/meta ] ; then
+      . $_PKG_DIR/meta
+    fi
+    echo $ROOT/$BUILD/${PKG_NAME}-${PKG_VERSION}
+  fi
 }
 
 tolower(){
@@ -75,17 +95,6 @@ require_cxx() {
     echo "$1 requires C++ toolchain support, aborting."
     exit 1
   fi
-}
-
-xorg_drv_configure_prepend() {
-  incdir=${SYSROOT_PREFIX}/usr/include/xorg
-  for f in dri.h sarea.h dristruct.h exa.h damage.h xf86Module.h; do
-    incfile="$incdir/$f"
-    if [ -f "$incfile" ]; then
-      p=`echo "$incfile" | sed 'y%*+%pp%;s%[^_[:alnum:]]%_%g'`
-      eval "export ac_cv_file_$p=yes"
-    fi
-  done
 }
 
 add_user() {
@@ -360,7 +369,6 @@ if [ "$BOOTLOADER" = "u-boot" ]; then
   config_message="$config_message\n - U-Boot config file:\t\t\t $UBOOT_CONFIGFILE"
 fi
   config_message="$config_message\n - UDevil support:\t\t\t $UDEVIL"
-  config_message="$config_message\n - Parted support:\t\t\t $PARTED"
   config_message="$config_message\n - Installer support:\t\t\t $INSTALLER_SUPPORT"
 
   # Misc. Filesystems

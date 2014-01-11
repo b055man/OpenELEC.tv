@@ -1,32 +1,30 @@
 ################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
-#      Copyright (C) 2009-2012 Stephan Raue (stephan@openelec.tv)
+#      Copyright (C) 2009-2014 Stephan Raue (stephan@openelec.tv)
 #
-#  This Program is free software; you can redistribute it and/or modify
+#  OpenELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2, or (at your option)
-#  any later version.
+#  the Free Software Foundation, either version 2 of the License, or
+#  (at your option) any later version.
 #
-#  This Program is distributed in the hope that it will be useful,
+#  OpenELEC is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with OpenELEC.tv; see the file COPYING.  If not, write to
-#  the Free Software Foundation, 51 Franklin Street, Suite 500, Boston, MA 02110, USA.
-#  http://www.gnu.org/copyleft/gpl.html
+#  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
 PKG_NAME="xorg-server"
-PKG_VERSION="1.14.4"
+PKG_VERSION="1.15.0"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
 PKG_SITE="http://www.X.org"
 PKG_URL="http://xorg.freedesktop.org/archive/individual/xserver/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS="libpciaccess libX11 libXfont libdrm openssl freetype pixman systemd xorg-launch-helper"
-PKG_BUILD_DEPENDS_TARGET="toolchain util-macros font-util fontsproto randrproto recordproto renderproto dri2proto fixesproto damageproto scrnsaverproto videoproto inputproto xf86dgaproto xf86vidmodeproto xf86driproto xf86miscproto glproto libpciaccess libX11 libXfont libxkbfile libdrm openssl freetype pixman fontsproto systemd"
+PKG_BUILD_DEPENDS_TARGET="toolchain util-macros font-util fontsproto randrproto recordproto renderproto dri2proto fixesproto damageproto scrnsaverproto videoproto inputproto xf86dgaproto xf86vidmodeproto xf86driproto xf86miscproto glproto presentproto libpciaccess libX11 libXfont libxkbfile libdrm openssl freetype pixman fontsproto systemd"
 PKG_PRIORITY="optional"
 PKG_SECTION="x11/xserver"
 PKG_SHORTDESC="xorg-server: The Xorg X server"
@@ -99,7 +97,6 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-debug \
                            --enable-glx-tls \
                            --enable-registry \
                            $XORG_COMPOSITE \
-                           $XORG_XINERAMA \
                            --enable-mitshm \
                            --disable-xres \
                            --enable-record \
@@ -111,22 +108,32 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-debug \
                            --disable-xdm-auth-1 \
                            $XORG_MESA \
                            --enable-dri2 \
+                           --disable-dri3 \
+                           --enable-present \
+                           $XORG_XINERAMA \
                            --enable-xf86vidmode \
                            --disable-xace \
+                           --disable-xselinux \
                            --disable-xcsecurity \
                            --disable-tslib \
                            --enable-dbe \
                            --disable-xf86bigfont \
                            --enable-dpms \
                            --enable-config-udev \
+                           --enable-config-udev-kms \
                            --disable-config-dbus \
                            --disable-config-hal \
+                           --disable-config-wscons \
                            --enable-xfree86-utils \
                            --enable-vgahw \
                            --enable-vbe \
                            --enable-int10-module \
                            --disable-windowswm \
                            --enable-libdrm \
+                           --enable-clientids \
+                           --enable-pciaccess \
+                           --enable-linux-acpi \
+                           --enable-linux-apm \
                            --enable-xorg \
                            --disable-dmx \
                            --disable-xvfb \
@@ -138,15 +145,20 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-debug \
                            --disable-xephyr \
                            --disable-xfake \
                            --disable-xfbdev \
+                           --disable-kdrive-kbd \
+                           --disable-kdrive-mouse \
+                           --disable-kdrive-evdev \
+                           --disable-libunwind \
+                           --disable-install-setuid \
                            --enable-unix-transport \
                            --disable-tcp-transport \
+                           --disable-ipv6 \
                            --disable-local-transport \
-                           --disable-install-setuid \
                            --disable-secure-rpc \
+                           --enable-xtrans-send-fds \
                            --disable-docs \
                            --disable-devel-docs \
                            --with-int10=x86emu \
-                           --disable-ipv6 \
                            --with-gnu-ld \
                            --with-sha1=libcrypto \
                            --with-os-vendor=OpenELEC.tv \
