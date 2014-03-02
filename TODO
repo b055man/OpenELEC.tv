@@ -4,6 +4,6 @@ ncurses-5.8/5.9:
 irserver:
   - rework irserver/init.d for systemd
 
-buildsystem:
-  - always use fakeroot for converted packages
-  - built-in $PKG_DIR/unpack replacement
+settings addon:
+  - remove ps3 sleep? should be fixed in bluez 5.13/5.14
+  - move LCDd to services

@@ -65,15 +65,17 @@ kernel_version() {
   echo ${PKG_VERSION}
 }
 
+# get kernel module dir
+get_module_dir() {
+  basename $(ls -d $(get_build_dir linux)/.install_pkg/lib/modules/*)
+}
+
 # get package's build dir
 get_build_dir() {
   if [ ! -z $1 ] ; then
     local _PKG_DIR=$(find $ROOT/packages -name $1)
     if [ -d $_PKG_DIR -a -f $_PKG_DIR/package.mk ] ; then
       . $_PKG_DIR/package.mk
-    # TODO: remove
-    elif [ -d $_PKG_DIR -a -f $_PKG_DIR/meta ] ; then
-      . $_PKG_DIR/meta
     fi
     echo $ROOT/$BUILD/${PKG_NAME}-${PKG_VERSION}
   fi
@@ -203,7 +205,7 @@ fix_module_depends() {
 # Usage: enable_service <unit> [target]
 enable_service () {
   local unit="$1"
-  local unit_dir="/lib/systemd/system"
+  local unit_dir="/usr/lib/systemd/system"
   local target="$2"
   local target_dir=$INSTALL
 
@@ -361,7 +363,6 @@ show_config() {
   config_message="$config_message\n $dashes$dashes"
 
   config_message="$config_message\n - OEM Support:\t\t\t\t $OEM_SUPPORT"
-  config_message="$config_message\n - Default Hostname:\t\t\t $HOSTNAME"
   config_message="$config_message\n - Default ROOT Password:\t\t $ROOT_PASSWORD"
   config_message="$config_message\n - Bootloader:\t\t\t\t $BOOTLOADER"
 if [ "$BOOTLOADER" = "u-boot" ]; then
