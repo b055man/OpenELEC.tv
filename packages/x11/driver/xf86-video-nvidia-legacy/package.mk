@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="xf86-video-nvidia-legacy"
-PKG_VERSION="304.117"
+PKG_VERSION="304.121"
 PKG_REV="1"
 PKG_ARCH="i386 x86_64"
 PKG_LICENSE="nonfree"
@@ -73,4 +73,10 @@ makeinstall_target() {
 
   mkdir -p $INSTALL/usr/bin
     cp nvidia-smi $INSTALL/usr/bin
+
+  if [ "$VDPAU" = yes ]; then
+    mkdir -p $INSTALL/usr/lib/vdpau
+      cp libvdpau_nvidia.so* $INSTALL/usr/lib/vdpau/libvdpau_nvidia.so.1
+      ln -sf libvdpau_nvidia.so.1 $INSTALL/usr/lib/vdpau/libvdpau_nvidia.so
+  fi
 }

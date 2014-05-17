@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
@@ -84,6 +84,19 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
   if [ -n "$GIT_HASH" ]; then
     echo "$GIT_HASH" >> $INSTALL/etc/gitrev
   fi
+  
+# create /etc/os-release
+  echo -e "NAME=$DISTRONAME" > $INSTALL/etc/os-release
+  echo -e "VERSION=$OPENELEC_VERSION" >> $INSTALL/etc/os-release
+  echo -e "ID=openelec" >> $INSTALL/etc/os-release
+  echo -e "VERSION_ID=$OS_VERSION" >> $INSTALL/etc/os-release
+  echo -e "PRETTY_NAME=$DISTRONAME ($([ "$OFFICIAL" = "yes" ] && echo "official" ||  echo "unofficial")) - Version: $OPENELEC_VERSION" >> $INSTALL/etc/os-release
+  echo -e "HOME_URL=http://www.openelec.tv" >> $INSTALL/etc/os-release
+  echo -e "BUG_REPORT_URL=https://github.com/OpenELEC/OpenELEC.tv" >> $INSTALL/etc/os-release
+  if [ -n "$GIT_HASH" ]; then
+	echo -e "BUILD_ID=$GIT_HASH" >> $INSTALL/etc/os-release
+  fi
+  
 
   if [ "$OFFICIAL" = "yes" ]; then
     echo "official" > $INSTALL/etc/build
@@ -176,7 +189,7 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
 
 # copy kernel to target dir
   if [ "$BOOTLOADER" = "u-boot" ]; then
-    KERNEL_IMAGE="uImage"
+    KERNEL_IMAGE="$KERNEL_UBOOT_TARGET"
   elif [ "$BOOTLOADER" = "bcm2835-bootloader" ]; then
     KERNEL_IMAGE="zImage"
   else
@@ -277,7 +290,16 @@ IMAGE_NAME="$DISTRONAME-$TARGET_VERSION"
       tar cf $TARGET_IMG/$IMAGE_NAME.tar -C target $IMAGE_NAME
 
     # create image files if requested
-      if [ "$1" = "mkimage" -a -n "$BOOTLOADER" ]; then
+      if [ "$1" = "mkimage" -a "$BOOTLOADER" = "atv-bootloader" ]; then
+        # variables used in image script must be passed
+        sudo env \
+          ROOT="$ROOT" \
+          BUILD="$BUILD" \
+          RELEASE_DIR="$RELEASE_DIR" \
+          TARGET_IMG="$TARGET_IMG" \
+          IMAGE_NAME="$IMAGE_NAME" \
+          $SCRIPTS/mkimage-atv
+      elif [ "$1" = "mkimage" -a -n "$BOOTLOADER" ]; then
         if [ "$2" == "efi" ] ; then
           UEFI=yes
         fi

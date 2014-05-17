@@ -1,5 +1,5 @@
-# Name of the Distro to build (full name, without special charcters)
-  DISTRONAME="OpenELEC"
+# Name of the Distro to build (full name, without special characters)
+  DISTRONAME="OpenELEC_Helix"
 
 # short project description
   DESCRIPTION="OpenELEC is a fast and userfriendly XBMC Mediacenter distribution."
@@ -91,6 +91,15 @@
 # Target Configfile for u-boot
   UBOOT_CONFIGFILE=""
 
+# Kernel target for u-boot (default 'uImage' if BOOTLOADER=u-boot) (uImage / zImage)
+  KERNEL_UBOOT_TARGET="zImage"
+
+# Kernel extra targets to build
+  KERNEL_UBOOT_EXTRA_TARGET="imx6q-cubox-i.dtb imx6dl-cubox-i.dtb imx6dl-hummingboard.dtb"
+
+# Additional kernel make parameters (for example to specify the u-boot loadaddress)
+  KERNEL_MAKE_EXTRACMD=""
+
 # GCC to use. values can be:
 # default:  default mainline gcc
   GCC_VERSION="4.7"
@@ -106,7 +115,7 @@
   SQUASHFS_COMPRESSION="gzip"
 
 # Mediacenter to use (xbmc / no)
-  MEDIACENTER="xbmc"
+  MEDIACENTER="xbmc-master"
 
 # Skins to install (Confluence)
 # Space separated list is supported,
@@ -144,6 +153,9 @@
 # build and install PulseAudio support (yes / no)
   PULSEAUDIO_SUPPORT="no"
 
+# build and install espeak support (yes / no)
+  ESPEAK_SUPPORT="yes"
+
 # build and install with non-free support
 # (RAR compression support in XBMC) (yes / no)
   NONFREE_SUPPORT="yes"
@@ -162,11 +174,10 @@
 # for a list of additinoal drivers see packages/linux-drivers
 # Space separated list is supported,
 # e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
-#  ADDITIONAL_DRIVERS="RTL8192CU RTL8188EU dvbhdhomerun"
-  ADDITIONAL_DRIVERS="RTL8188EU"
+  ADDITIONAL_DRIVERS="RTL8192CU RTL8192DU RTL8188EU dvbhdhomerun"
 
 # build and install bluetooth support (yes / no)
-  BLUETOOTH_SUPPORT="no"
+  BLUETOOTH_SUPPORT="yes"
 
 # build and install with XBMC webfrontend (yes / no)
   WEBSERVER="yes"
@@ -233,7 +244,7 @@
 # OpenGL-ES implementation to use (no / bcm2835-driver / gpu-viv-bin-mx6q)
   OPENGLES="gpu-viv-bin-mx6q"
 
-# Windowmanager to use (ratpoison / fluxbox / dwm / none)
+# Windowmanager to use (ratpoison / fluxbox / none)
   WINDOWMANAGER="none"
 
 # include uvesafb support (yes / no)
@@ -242,9 +253,9 @@
 # Displayserver to use (x11 / no)
   DISPLAYSERVER="no"
 
-# Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,nvidia,nouveau,vmware)
+# Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,nvidia,nouveau)
 # Space separated list is supported,
-# e.g. GRAPHIC_DRIVERS="i915 i965 r300 r600 radeon nvidia nouveau"
+# e.g. GRAPHIC_DRIVERS="i915 i965 r300 r600 radeonsi nvidia nouveau"
   GRAPHIC_DRIVERS=""
 
 # XBMC Player implementation to use (default / bcm2835-driver)
@@ -297,7 +308,7 @@
 # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
 # Space separated list is supported,
 # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
-  FIRMWARE="firmware-imx misc-firmware wlan-firmware dvb-firmware"
+  FIRMWARE="misc-firmware wlan-firmware dvb-firmware"
 
 # build with lm_sensors hardware monitoring support (yes / no)
   SENSOR_SUPPORT="yes"

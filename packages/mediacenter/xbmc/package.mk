@@ -17,13 +17,13 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="13.alpha-5cd779b"
+PKG_VERSION="13-692cfba"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.xbmc.org"
 PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
-PKG_DEPENDS_TARGET="toolchain boost Python zlib bzip2 systemd pciutils lzo pcre swig:host libass enca curl libssh rtmpdump fontconfig fribidi tinyxml libjpeg-turbo libpng tiff freetype jasper libmad libsamplerate libogg libcdio libmodplug faad2 flac libmpeg2 taglib libxml2 libxslt yajl sqlite libvorbis"
+PKG_DEPENDS_TARGET="toolchain boost Python zlib bzip2 systemd pciutils lzo pcre swig:host libass enca curl rtmpdump fontconfig fribidi gnutls tinyxml libjpeg-turbo libpng tiff freetype jasper libmad libsamplerate libogg libcdio libmodplug faad2 flac libmpeg2 taglib libxml2 libxslt yajl sqlite libvorbis"
 PKG_PRIORITY="optional"
 PKG_SECTION="mediacenter"
 PKG_SHORTDESC="xbmc: XBMC Mediacenter"
@@ -86,6 +86,11 @@ if [ "$PULSEAUDIO_SUPPORT" = yes ]; then
   XBMC_PULSEAUDIO="--enable-pulse"
 else
   XBMC_PULSEAUDIO="--disable-pulse"
+fi
+
+if [ "$ESPEAK_SUPPORT" = yes ]; then
+# for espeak support
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET espeak"
 fi
 
 if [ "$CEC_SUPPORT" = yes ]; then
@@ -248,6 +253,7 @@ else
 fi
 
 if [ "$SSHLIB_SUPPORT" = yes ]; then
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libssh"
   XBMC_SSH="--enable-ssh"
 else
   XBMC_SSH="--disable-ssh"

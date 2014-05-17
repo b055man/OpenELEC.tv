@@ -1,5 +1,8 @@
-# Name of the Distro to build (full name, without special charcters)
+# Name of the Distro to build (full name, without special characters)
   DISTRONAME="OpenELEC"
+  if [ "$XBMC" = master ]; then
+    DISTRONAME="OpenELEC_Helix"
+  fi
 
 # short project description
   DESCRIPTION="OpenELEC is a fast and userfriendly XBMC Mediacenter distribution."
@@ -91,13 +94,22 @@
 # Target Configfile for u-boot
   UBOOT_CONFIGFILE=""
 
+# Kernel target for u-boot (default 'uImage' if BOOTLOADER=u-boot) (uImage / zImage)
+  KERNEL_UBOOT_TARGET=""
+
+# Kernel extra targets to build
+  KERNEL_UBOOT_EXTRA_TARGET=""
+
+# Additional kernel make parameters (for example to specify the u-boot loadaddress)
+  KERNEL_MAKE_EXTRACMD=""
+
 # GCC to use. values can be:
 # default:  default mainline gcc
   GCC_VERSION="4.7"
 
 # Kernel to use. values can be:
 # default:  default mainline kernel
-  LINUX="default"
+  LINUX="3.14"
 
 # use linux-next (latest rc) instead latest released version
   LINUX_NEXT="no"
@@ -107,6 +119,9 @@
 
 # Mediacenter to use (xbmc / no)
   MEDIACENTER="xbmc"
+  if [ "$XBMC" = master ]; then
+    MEDIACENTER="xbmc-master"
+  fi
 
 # Skins to install (Confluence)
 # Space separated list is supported,
@@ -139,10 +154,13 @@
   XBMC_VIS_FISHBMC="no"
 
 # build and install ALSA Audio support (yes / no)
-  ALSA_SUPPORT="no"
+  ALSA_SUPPORT="yes"
 
 # build and install PulseAudio support (yes / no)
   PULSEAUDIO_SUPPORT="no"
+
+# build and install espeak support (yes / no)
+  ESPEAK_SUPPORT="yes"
 
 # build and install with non-free support
 # (RAR compression support in XBMC) (yes / no)
@@ -162,7 +180,7 @@
 # for a list of additinoal drivers see packages/linux-drivers
 # Space separated list is supported,
 # e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
-  ADDITIONAL_DRIVERS="RTL8192CU RTL8188EU dvbhdhomerun"
+  ADDITIONAL_DRIVERS="RTL8192CU RTL8192DU RTL8188EU RTL8812AU dvbhdhomerun"
 
 # build and install bluetooth support (yes / no)
   BLUETOOTH_SUPPORT="yes"
@@ -232,7 +250,7 @@
 # OpenGL-ES implementation to use (no / bcm2835-driver)
   OPENGLES="bcm2835-driver"
 
-# Windowmanager to use (ratpoison / fluxbox / dwm / none)
+# Windowmanager to use (ratpoison / fluxbox / none)
   WINDOWMANAGER="none"
 
 # include uvesafb support (yes / no)
@@ -241,9 +259,9 @@
 # Displayserver to use (x11 / no)
   DISPLAYSERVER="no"
 
-# Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,nvidia,nouveau,vmware)
+# Xorg Graphic drivers to use (all / i915,i965,r200,r300,r600,nvidia,nouveau)
 # Space separated list is supported,
-# e.g. GRAPHIC_DRIVERS="i915 i965 r300 r600 radeon nvidia nouveau"
+# e.g. GRAPHIC_DRIVERS="i915 i965 r300 r600 radeonsi nvidia nouveau"
   GRAPHIC_DRIVERS=""
 
 # XBMC Player implementation to use (default / bcm2835-driver)

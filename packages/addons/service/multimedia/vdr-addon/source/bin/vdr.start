@@ -78,7 +78,7 @@ fi
 
 # keep softcam first
 if [ "$ENABLE_SOFTCAM" == "true" ] ; then
-  VDR_ARG="$VDR_ARG -P $SOFTCAM_PLUGIN"
+  VDR_ARG="$VDR_ARG -P dvbapi"
 fi
 VDR_ARG="$VDR_ARG -P wirbelscan -P wirbelscancontrol"
 if [ "$ENABLE_IPTV" == "true" ] ; then
@@ -96,8 +96,17 @@ fi
 if [ "$ENABLE_CONTROL" == "true" ] ; then
   VDR_ARG="$VDR_ARG -P 'control -p $CONTROL_PORT'"
 fi
+if [ "$ENABLE_EEPG" == "true" ] ; then
+  VDR_ARG="$VDR_ARG -P eepg"
+fi
 if [ "$ENABLE_EPGSEARCH" == "true" ] ; then
   VDR_ARG="$VDR_ARG -P epgsearch"
+fi
+if [ "$ENABLE_DUMMYDEVICE" == "true" ] ; then
+  VDR_ARG="$VDR_ARG -P dummydevice"
+fi
+if [ "$ENABLE_SATIP" == "true" ] ; then
+  VDR_ARG="$VDR_ARG -P satip"
 fi
 if [ "$ENABLE_XMLTV2VDR" == "true" ] ; then
   VDR_ARG="$VDR_ARG -P 'xmltv2vdr --epgfile=$ADDON_CACHE_DIR/epg.db'"
@@ -140,10 +149,13 @@ for driver_dvb in $(find /storage/.xbmc/addons/driver.dvb.*/bin/userspace-driver
 done
 
 # (wait for) at least 1 adapter (xbmc allows to set 0)
+# xbmc allows "numeric" type field to be empty. lets handle thaat
+[ "$NUM_ADAPTERS" = "" ] && NUM_ADAPTERS=1
+# 0 does not make sense. should be 1 or more
 [ $NUM_ADAPTERS -lt 1 ] && NUM_ADAPTERS=1
 if [ "$WAIT_FOR_FEINIT" == "true" ] ; then
   while [ true ] ; do
-    if [ -e /dev/dvb/adapter$((NUM_ADAPTERS-1))/frontend* ] ; then
+    if [ -e /dev/dvb/adapter$((NUM_ADAPTERS-1))/frontend0 ] ; then
       break
     fi
     sleep 1

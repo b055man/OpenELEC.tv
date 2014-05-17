@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="xbmc-addon-xvdr"
-PKG_VERSION="df75826"
+PKG_VERSION="77a27f8"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
@@ -39,4 +39,10 @@ export CXXFLAGS="$CXXFLAGS -DZLIB_INTERNAL=1"
 pre_make_target() {
   # dont build parallel
   MAKEFLAGS=-j1
+}
+
+post_makeinstall_target() {
+  if [ "$DEBUG" != yes ]; then
+    $STRIP $INSTALL/usr/share/xbmc/addons/pvr.vdr.xvdr/XBMC_VDR_xvdr.pvr
+  fi
 }

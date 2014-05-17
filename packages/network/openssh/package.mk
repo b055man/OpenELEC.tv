@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="openssh"
-PKG_VERSION="6.5p1"
+PKG_VERSION="6.6p1"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
@@ -50,9 +50,6 @@ PKG_CONFIGURE_OPTS_TARGET="--libexecdir=/usr/lib/openssh \
 pre_configure_target() {
   export LD="$TARGET_CC"
   export LDFLAGS="$TARGET_CFLAGS $TARGET_LDFLAGS"
-
-  # openssh fails to build with LTO support on gcc-4.8.2
-  strip_lto
 }
 
 post_makeinstall_target() {
