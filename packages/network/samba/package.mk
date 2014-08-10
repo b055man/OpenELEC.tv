@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="samba"
-PKG_VERSION="3.6.23"
+PKG_VERSION="3.6.24"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
@@ -80,7 +80,6 @@ PKG_CONFIGURE_OPTS_TARGET="ac_cv_file__proc_sys_kernel_core_pattern=yes \
                            --disable-dnssd \
                            $SMB_AVAHI \
                            --disable-pthreadpool \
-                           --enable-gnutls \
                            --disable-netapi \
                            --disable-dmalloc \
                            --with-fhs \

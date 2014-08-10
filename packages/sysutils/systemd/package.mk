@@ -17,13 +17,13 @@
 ################################################################################
 
 PKG_NAME="systemd"
-PKG_VERSION="212"
+PKG_VERSION="215"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.freedesktop.org/wiki/Software/systemd"
 PKG_URL="http://www.freedesktop.org/software/systemd/$PKG_NAME-$PKG_VERSION.tar.xz"
-PKG_DEPENDS_TARGET="toolchain attr libcap kmod util-linux glib libgcrypt"
+PKG_DEPENDS_TARGET="toolchain libcap kmod util-linux glib libgcrypt"
 PKG_PRIORITY="required"
 PKG_SECTION="system"
 PKG_SHORTDESC="systemd: a system and session manager"
@@ -31,9 +31,6 @@ PKG_LONGDESC="systemd is a system and session manager for Linux, compatible with
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="yes"
-
-# libgcrypt is needed actually only for autoreconf
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libgcrypt"
 
 PKG_CONFIGURE_OPTS_TARGET="ac_cv_func_malloc_0_nonnull=yes \
                            KMOD=/usr/bin/kmod \
@@ -51,43 +48,48 @@ PKG_CONFIGURE_OPTS_TARGET="ac_cv_func_malloc_0_nonnull=yes \
                            --disable-ima \
                            --disable-chkconfig \
                            --disable-selinux \
+                           --disable-apparmor \
                            --disable-xz \
-                           --disable-tcpwrap \
                            --disable-pam \
                            --disable-acl \
-                           --disable-xattr \
                            --disable-smack \
                            --disable-gcrypt \
                            --disable-audit \
+                           --disable-elfutils \
                            --disable-libcryptsetup \
                            --disable-qrencode \
                            --disable-microhttpd \
+                           --disable-gnutls \
                            --disable-binfmt \
                            --disable-vconsole \
                            --disable-readahead \
                            --disable-bootchart \
                            --disable-quotacheck \
                            --enable-tmpfiles \
+                           --disable-sysusers \
                            --disable-randomseed \
-                           --enable-logind \
                            --disable-backlight \
+                           --disable-rfkill \
+                           --enable-logind \
                            --disable-machined \
                            --disable-hostnamed \
                            --disable-timedated \
+                           --disable-timesyncd \
                            --disable-localed \
                            --disable-coredump \
                            --disable-polkit \
-                           --disable-multi-seat-x \
+                           --disable-resolved \
                            --disable-networkd \
                            --disable-efi \
+                           --disable-multi-seat-x \
                            --disable-kdbus \
                            --disable-myhostname \
                            --enable-gudev \
                            --disable-manpages \
+                           --enable-split-usr \
                            --disable-tests \
                            --without-python \
                            --disable-python-devel \
-                           --enable-split-usr \
                            --with-firmware-path=/storage/.config/firmware:/lib/firmware \
                            --with-sysvinit-path= \
                            --with-sysvrcnd-path= \
@@ -111,6 +113,7 @@ post_makeinstall_target() {
     rm -rf $INSTALL/usr/lib/kernel/install.d
     rm -rf $INSTALL/usr/lib/rpm
     rm  -f $INSTALL/usr/bin/kernel-install
+    rm -rf $INSTALL/etc/xdg
 
    rm -f $INSTALL/usr/lib/udev/hwdb.d/20-OUI.hwdb
    rm -f $INSTALL/usr/lib/udev/hwdb.d/20-acpi-vendor.hwdb
@@ -138,10 +141,6 @@ post_makeinstall_target() {
     mkdir -p $INSTALL/usr/bin
       rm -rf $INSTALL/usr/bin/systemd-machine-id-setup
       cp $PKG_DIR/scripts/systemd-machine-id-setup $INSTALL/usr/bin
-
-  # copy openelec helper scripts
-    mkdir -p $INSTALL/usr/lib/openelec
-      cp $PKG_DIR/scripts/openelec-userconfig $INSTALL/usr/lib/openelec/
 
   # provide 'halt', 'shutdown', 'reboot' & co.
     mkdir -p $INSTALL/usr/sbin
@@ -185,6 +184,15 @@ post_makeinstall_target() {
     rm -rf $INSTALL/usr/lib/systemd/system/getty.target
     rm -rf $INSTALL/usr/lib/systemd/system/multi-user.target.wants/getty.target
 
+  # remove other notused or nonsense stuff (our /etc is ro)
+    rm -rf $INSTALL/usr/lib/systemd/system/systemd-update-done.service
+    rm -rf $INSTALL/usr/lib/systemd/system/sysinit.target.wants/systemd-update-done.service
+    rm -rf $INSTALL/usr/lib/systemd/system/ldconfig.service
+    rm -rf $INSTALL/usr/lib/systemd/system/sysinit.target.wants/ldconfig.service
+    rm -rf $INSTALL/usr/lib/systemd/system/systemd-udev-hwdb-update.service
+    rm -rf $INSTALL/usr/lib/systemd/system/sysinit.target.wants/systemd-udev-hwdb-update.service
+    rm -rf $INSTALL/usr/lib/tmpfiles.d/etc.conf
+
   # remove rootfs fsck
     rm -rf $INSTALL/usr/lib/systemd/system/systemd-fsck-root.service
     rm -rf $INSTALL/usr/lib/systemd/system/local-fs.target.wants/systemd-fsck-root.service
@@ -203,6 +211,9 @@ post_makeinstall_target() {
 post_install() {
   add_group systemd-journal 190
 
+  add_group systemd-network 193
+  add_user systemd-network x 193 193 "systemd-network" "/" "/bin/sh"
+
   add_group audio 63
   add_group cdrom 11
   add_group dialout 18
@@ -214,6 +225,7 @@ post_install() {
   add_group tty 5
   add_group video 39
   add_group utmp 22
+  add_group input 199 # TODO change gid
 
   enable_service machine-id.service
   enable_service debugconfig.service

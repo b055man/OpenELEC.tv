@@ -21,7 +21,7 @@
 
 echo "getting sources..."
   if [ ! -d xbmc-pvr-addons.git ]; then
-    git clone git://github.com/opdenkamp/xbmc-pvr-addons.git xbmc-pvr-addons.git
+    git clone git://github.com/opdenkamp/xbmc-pvr-addons.git -b master xbmc-pvr-addons.git
   fi
 
   cd xbmc-pvr-addons.git

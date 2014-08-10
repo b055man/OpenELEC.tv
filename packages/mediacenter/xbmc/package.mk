@@ -17,13 +17,14 @@
 ################################################################################
 
 PKG_NAME="xbmc"
-PKG_VERSION="13-692cfba"
+PKG_VERSION="14-94bc482"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.xbmc.org"
 PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
-PKG_DEPENDS_TARGET="toolchain boost Python zlib bzip2 systemd pciutils lzo pcre swig:host libass enca curl rtmpdump fontconfig fribidi gnutls tinyxml libjpeg-turbo libpng tiff freetype jasper libmad libsamplerate libogg libcdio libmodplug faad2 flac libmpeg2 taglib libxml2 libxslt yajl sqlite libvorbis"
+PKG_DEPENDS_TARGET="toolchain boost Python zlib bzip2 systemd pciutils lzo pcre swig:host libass enca curl rtmpdump fontconfig fribidi tinyxml libjpeg-turbo libpng tiff freetype jasper libogg libcdio libmodplug libmpeg2 taglib libxml2 libxslt yajl sqlite libvorbis ffmpeg xbmc:host"
+PKG_DEPENDS_HOST="toolchain"
 PKG_PRIORITY="optional"
 PKG_SECTION="mediacenter"
 PKG_SHORTDESC="xbmc: XBMC Mediacenter"
@@ -176,13 +177,6 @@ if [ "$FAAC_SUPPORT" = yes ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET faac"
 fi
 
-if [ "$ENCODER_LAME" = yes ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET lame"
-  XBMC_LAMEENC="--enable-libmp3lame"
-else
-  XBMC_LAMEENC="--disable-libmp3lame"
-fi
-
 if [ "$BLURAY_SUPPORT" = yes ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libbluray"
   XBMC_BLURAY="--enable-libbluray"
@@ -191,7 +185,7 @@ else
 fi
 
 if [ "$AVAHI_DAEMON" = yes ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET avahi"
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET avahi nss-mdns"
   XBMC_AVAHI="--enable-avahi"
 else
   XBMC_AVAHI="--disable-avahi"
@@ -288,17 +282,10 @@ if [ "$VAAPI" = yes ]; then
 # configure GPU drivers and dependencies:
   get_graphicdrivers
 
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $LIBVA"
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libva-intel-driver"
   XBMC_VAAPI="--enable-vaapi"
 else
   XBMC_VAAPI="--disable-vaapi"
-fi
-
-if [ "$CRYSTALHD" = yes ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET crystalhd"
-  XBMC_CRYSTALHD="--enable-crystalhd"
-else
-  XBMC_CRYSTALHD="--disable-crystalhd"
 fi
 
 export CXX_FOR_BUILD="$HOST_CXX"
@@ -315,8 +302,6 @@ export ac_python_version="$PYTHON_VERSION"
 
 PKG_CONFIGURE_OPTS_TARGET="gl_cv_func_gettimeofday_clobber=no \
                            ac_cv_lib_bluetooth_hci_devid=no \
-                           --with-arch=$TARGET_ARCH \
-                           --with-cpu=$TARGET_CPU \
                            --disable-debug \
                            --disable-optimizations \
                            $XBMC_OPENGL \
@@ -325,9 +310,6 @@ PKG_CONFIGURE_OPTS_TARGET="gl_cv_func_gettimeofday_clobber=no \
                            $XBMC_OPENMAX \
                            $XBMC_VDPAU \
                            $XBMC_VAAPI \
-                           $XBMC_CRYSTALHD \
-                           --disable-xvba \
-                           --disable-vdadecoder \
                            --disable-vtbdecoder \
                            --disable-tegra \
                            --disable-profiling \
@@ -351,11 +333,8 @@ PKG_CONFIGURE_OPTS_TARGET="gl_cv_func_gettimeofday_clobber=no \
                            $XBMC_AFP \
                            --enable-libvorbisenc \
                            --disable-libcap \
-                           --enable-ffmpeg-libvorbis \
-                           $XBMC_LAMEENC \
                            $XBMC_DVDCSS \
                            --disable-mid \
-                           --disable-hal \
                            $XBMC_AVAHI \
                            $XBMC_UPNP \
                            $XBMC_MYSQL \
@@ -367,10 +346,23 @@ PKG_CONFIGURE_OPTS_TARGET="gl_cv_func_gettimeofday_clobber=no \
                            $XBMC_WEBSERVER \
                            $XBMC_OPTICAL \
                            $XBMC_BLURAY \
-                           --enable-texturepacker --with-texturepacker-root="$ROOT/$TOOLCHAIN" \
-                           --disable-external-libraries \
+                           --enable-texturepacker \
                            $XBMC_CODEC \
                            $XBMC_PLAYER"
+
+pre_configure_host() {
+# xbmc fails to build in subdirs
+  cd $ROOT/$PKG_BUILD
+    rm -rf .$HOST_NAME
+}
+
+make_host() {
+  make -C tools/depends/native/JsonSchemaBuilder
+}
+
+makeinstall_host() {
+  cp -PR tools/depends/native/JsonSchemaBuilder/native/JsonSchemaBuilder $ROOT/$TOOLCHAIN/bin
+}
 
 pre_build_target() {
 # adding fake Makefile for stripped skin
@@ -395,6 +387,8 @@ pre_configure_target() {
   export CFLAGS="$CFLAGS $XBMC_CFLAGS"
   export CXXFLAGS="$CXXFLAGS $XBMC_CXXFLAGS"
   export LIBS="$LIBS -lz"
+
+  export JSON_BUILDER=$ROOT/$TOOLCHAIN/bin/JsonSchemaBuilder
 }
 
 make_target() {
@@ -449,10 +443,8 @@ post_makeinstall_target() {
   rm -rf $INSTALL/usr/share/applications
   rm -rf $INSTALL/usr/share/icons
   rm -rf $INSTALL/usr/share/xbmc/addons/repository.pvr-*
-  rm -rf $INSTALL/usr/share/xbmc/addons/script.module.pysqlite
   rm -rf $INSTALL/usr/share/xbmc/addons/script.module.simplejson
   rm -rf $INSTALL/usr/share/xbmc/addons/visualization.dxspectrum
-  rm -rf $INSTALL/usr/share/xbmc/addons/visualization.itunes
   rm -rf $INSTALL/usr/share/xbmc/addons/visualization.milkdrop
   rm -rf $INSTALL/usr/share/xbmc/addons/service.xbmc.versioncheck
   rm -rf $INSTALL/usr/share/xsessions
