@@ -439,19 +439,19 @@ diff -Naur lcdproc-0.5.6-old/server/drivers/led.c lcdproc-0.5.6-new/server/drive
 +//
 +// INPUT: 
 +//  const char *pszValue - string to compare
-+//  short sValue - numberic value to compare
++//  short sOtherValue - numeric value to compare
 +//
 +// OUTPUT:
 +//   int - Boolean value, 0 on non match, 1 on success.
 +//
-+// DESCRIPTION: Compare a character value to a numeric value.
++// DESCRIPTION: Compare a hex value in a string to a numeric value.
 +//**************************************************************
-+int Compare(const char *pszValue, short sValue)
++int Compare(const char *pszValue, short sOtherValue)
 +{
-+  int iValue;
++  short sValue;
 +  // convert the pszValue to a number
-+  sscanf( pszValue, "%4x", &iValue);
-+  return( (short) iValue == sValue );
++  sscanf( pszValue, "%4hx", &sValue);
++  return( sValue == sOtherValue );
 +}
 +
 +
